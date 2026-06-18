@@ -143,8 +143,15 @@ export function StranglerFigRoadmap() {
       <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-700">
         <strong>Why not a rewrite?</strong> A big-bang rewrite requires running two systems in parallel,
         a forced cutover date, and carries full risk of data migration failures.
-        The Strangler Fig pattern eliminates all three — the new system grows around the old one
-        until the old one can be safely removed.
+        The Strangler Fig pattern eliminates all three — the new system grows around the old one until
+        the old one can be safely removed. Clinicians never lose access. The business never stops.
+      </div>
+      <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-xs text-green-700">
+        <strong>The point of this tab is not "replace WinForms."</strong> It's to show that I understand
+        what WinForms is doing, why it was the right choice when it was built, and how to work inside it —
+        while keeping the door open to incremental improvement if and when the business is ready.
+        The business logic that runs correctly in a legacy system is the hardest thing to rebuild.
+        I'd rather learn it first.
       </div>
     </div>
   );

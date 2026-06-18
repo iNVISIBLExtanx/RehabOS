@@ -27,11 +27,12 @@ const CONCEPTS: ConceptRow[] = [
   { concept: "Dependency inject",winforms: "Constructor params / locator",react: "Context / props",                 note: "Same principle, different runtime" },
 ];
 
-// Verbatim quotes from WINFORMS_CONCEPTS.md §"What Tom Wants to Hear"
+// Directly address Tom's concern: "will you get bored with our old stack?"
 const TOM_QUOTES = [
-  "WinForms is a well-understood, data-bound paradigm. DataGridView + BindingSource is the same event-driven model as React state — different syntax, same architecture.",
-  "The business logic in your VB.NET code is more valuable than the UI framework. I'd learn the billing rules first, then the controls second.",
-  "My learning curve from TypeScript to VB.NET/C# is measured in weeks, not months — shared static typing, OOP, and a managed runtime. The .NET Upgrade Assistant handles the mechanical parts.",
+  "WinForms is a well-understood, data-bound paradigm. DataGridView + BindingSource is the same event-driven model as React state — different syntax, same architecture. The mental model transfers in a day.",
+  "The business logic in your VB.NET code is more valuable than the UI framework. A system that has been billing WSIB correctly for years is impressive precisely because the rules are that complex. I'd learn the billing rules first — the controls are the easy part.",
+  "My learning curve from TypeScript to VB.NET/C# is measured in weeks, not months. Same static typing, same OOP, same managed runtime — just different syntax. The .NET Upgrade Assistant handles the mechanical migration pieces.",
+  "I'm not here to replace what's working. I'm here to understand why it works, maintain it, and help it evolve at a pace the business can absorb — that's what the Strangler Fig pattern is for.",
 ];
 
 export function ConceptMapper() {
@@ -43,6 +44,7 @@ export function ConceptMapper() {
         </h4>
         <p className="text-xs text-gray-500">
           Same mental model — event-driven UI trees + state changes. Different syntax, not different thinking.
+          A WinForms developer reading this table would feel at home in a React codebase within a week.
         </p>
       </div>
 
@@ -71,7 +73,7 @@ export function ConceptMapper() {
 
       {/* Tom quotes */}
       <div className="space-y-2">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">For Tom — IT Director (SQL Server / VB.NET background)</p>
+        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">On the "will you get bored?" question — directly</p>
         {TOM_QUOTES.map((quote, i) => (
           <blockquote key={i} className="border-l-4 border-green-500 pl-3 py-1 text-sm text-gray-700 bg-green-50 rounded-r">
             {quote}
