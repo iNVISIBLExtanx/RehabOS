@@ -266,6 +266,8 @@ CREATE TABLE progress_reports (
     service_code        VARCHAR(10) REFERENCES service_codes(service_code),
     -- Workflow
     drafted_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    signed_at           TIMESTAMPTZ,
+    signed_by           INT REFERENCES clinicians(clinician_id),
     submitted_at        TIMESTAMPTZ,
     submission_channel  VARCHAR(20) CHECK (submission_channel IN ('telus_eservices','paper','fax','portal')),
     created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -280,7 +282,9 @@ CREATE INDEX idx_reports_pending ON progress_reports(clinician_id, drafted_at)
     WHERE submitted_at IS NULL;
 
 COMMENT ON COLUMN progress_reports.form_data IS 'Full WSIB form field values as JSONB — queryable and auditable';
-COMMENT ON COLUMN progress_reports.submitted_at IS 'NULL = pending review. Never submit without clinician signature.';
+COMMENT ON COLUMN progress_reports.signed_at IS 'Clinician e-signature timestamp — must be set before submitted_at can be populated.';
+COMMENT ON COLUMN progress_reports.signed_by IS 'Clinician who signed the form — may differ from drafting clinician.';
+COMMENT ON COLUMN progress_reports.submitted_at IS 'NULL = pending review. Never submit without clinician signature (signed_at must not be NULL).';
 
 -- ============================================================
 -- BILLING & INVOICING
