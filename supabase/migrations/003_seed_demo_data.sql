@@ -238,7 +238,7 @@ VALUES
 INSERT INTO progress_reports
     (claim_id, clinician_id, appointment_id, report_type,
      form_data, rtw_status, rtw_date, prognosis, change_since_last,
-     service_code, drafted_at, submitted_at, submission_channel)
+     service_code, drafted_at, signed_at, signed_by, submitted_at, submission_channel)
 VALUES
 -- Form 8 for Alex Thornton (TBI)
 (1, 1, 1, 'Form8',
@@ -270,7 +270,7 @@ VALUES
   }',
   'unable_to_work', NULL,
   'full recovery not yet known', NULL,
-  '8ME', '2025-09-15 16:00:00+00', '2025-09-16 09:00:00+00', 'telus_eservices'),
+  '8ME', '2025-09-15 16:00:00+00', '2025-09-15 16:00:00+00', 1, '2025-09-16 09:00:00+00', 'telus_eservices'),
 
 -- Form 26 for Alex Thornton (progress report — recent visit)
 (1, 1, 4, 'Form26',
@@ -296,7 +296,7 @@ VALUES
   }',
   'unable_to_work', NULL,
   'partially recovered & improving', 'improving',
-  '26M', '2026-06-10 17:30:00+00', NULL, NULL),
+  '26M', '2026-06-10 17:30:00+00', NULL, NULL, NULL, NULL),
 
 -- Form 8 for David Kowalczyk (RTW — submitted same day)
 (5, 1, 12, 'Form8',
@@ -327,7 +327,7 @@ VALUES
   }',
   'modified_duties', '2025-12-16',
   'partially recovered, full recovery in ~8 weeks', NULL,
-  '8ME', '2025-12-13 13:00:00+00', '2025-12-13 16:00:00+00', 'telus_eservices');
+  '8ME', '2025-12-13 13:00:00+00', '2025-12-13 14:00:00+00', 1, '2025-12-13 16:00:00+00', 'telus_eservices');
 
 -- ============================================================
 -- INVOICES
@@ -362,9 +362,17 @@ VALUES
   NULL, NULL),
 
 -- Invoice 5: David Kowalczyk — FCE + Form 8 (submitted)
+-- WSIB RULE: Form 8 is the ONLY code on the first visit. FAF billed separately on next day.
 (5, 1, 1, 'INV-2025-00091', '2025-12-20',
   '2025-12-13', '2025-12-13',
-  204.58, 0.00, 204.58, 'submitted',
+  204.16, 0.00, 204.16, 'submitted',
+  '2025-12-20 10:00:00+00', NULL),
+
+-- Invoice 6: David Kowalczyk — FAF (separate submission, next business day)
+-- FAF cannot be billed on the same day as Form 8 per WSIB billing rules.
+(5, 1, 1, 'INV-2025-00092', '2025-12-20',
+  '2025-12-14', '2025-12-14',
+  45.00, 0.00, 45.00, 'submitted',
   '2025-12-20 10:00:00+00', NULL);
 
 -- ============================================================
@@ -393,10 +401,14 @@ VALUES
 (4, 4, '5101', '2026-06-10', 1, 159.14, 0.00, 'OT in-home treatment — cognitive ADL training'),
 (4, 4, '26M',  '2026-06-10', 1,  35.00, 0.00, 'WSIB Form 26 — progress report'),
 
--- Invoice 5 line items: David Kowalczyk FCE
+-- Invoice 5 line items: David Kowalczyk FCE + Form 8 only
+-- WSIB RULE: Form 8 (8ME) is the ONLY form code allowed on the first visit date.
 (5, 12, '5100', '2025-12-13', 2, 79.58, 0.00, 'OT clinic FCE — 2 units (120 min)'),
-(5, 12, '8ME',  '2025-12-13', 1, 45.00, 0.00, 'WSIB Form 8 Electronic — low back RSI'),
-(5, 12, 'FAF',  '2025-12-13', 1, 45.00, 0.00, 'Functional Abilities Form (NOT same day as Form 8 — second submission)');
+(5, 12, '8ME',  '2025-12-13', 1, 45.00, 0.00, 'WSIB Form 8 Electronic — low back RSI first report'),
+
+-- Invoice 6 line items: FAF on separate date (next business day after Form 8)
+-- FAF cannot be billed on the same day as Form 8 per WSIB billing rules.
+(6, 12, 'FAF',  '2025-12-14', 1, 45.00, 0.00, 'Functional Abilities Form — billed separately from Form 8');
 
 -- ============================================================
 -- VERIFY DATA INTEGRITY (Informational comments)
@@ -413,5 +425,5 @@ VALUES
 -- appointments: 12
 -- clinical_notes: 4
 -- progress_reports: 3
--- invoices: 5
+-- invoices: 6
 -- billing_line_items: 13
