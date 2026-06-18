@@ -34,3 +34,6 @@ yarn-error.log*
 # Supabase local dev
 .supabase/
 supabase/.temp/
+
+# MCP config contains secrets — never commit
+.mcp.json
